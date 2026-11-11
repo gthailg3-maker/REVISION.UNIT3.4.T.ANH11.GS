@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English 11 Revision | Units 3-4</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#142D53',
+                        accent: '#B77900',
+                        highlight: '#BE185D',
+                        bg: '#F5F7FC',
+                        surface: '#FFFFFF',
+                        correct: '#10B981',
+                        incorrect: '#EF4444'
+                    },
+                    fontFamily: {
+                        sans: ['Nunito', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'xl': '1rem', // 16px as requested
+                        '2xl': '1.25rem',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #F5F7FC; color: #1f2937; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Custom animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        
+        .paired-item { border-color: #B77900; background-color: #fef3c7; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo, useCallback } = React;
+
+        // --- DATA ---
+        const THEORY = {
+            3: {
+                title: "Unit 3: Cities of the future",
+                content: [
+                    {
+                        heading: "Động từ trạng thái (Stative Verbs)",
+                        text: "Diễn tả suy nghĩ, cảm xúc, sở hữu hoặc nhận thức qua giác quan. Khi mang nghĩa trạng thái, chúng thường không dùng tiếp diễn: know, understand, believe, like, love, prefer, want, own, belong…",
+                        examples: ["I believe this plan is useful.", "This apartment belongs to my aunt."]
+                    },
+                    {
+                        heading: "Động từ thay đổi cách dùng theo nghĩa",
+                        table: [
+                            { verb: "think", stative: "I think the city is modern.", dynamic: "I am thinking about moving." },
+                            { verb: "have", stative: "They have an electric car.", dynamic: "They are having a meeting." },
+                            { verb: "taste", stative: "The soup tastes good.", dynamic: "The chef is tasting the soup." },
+                            { verb: "smell", stative: "The flowers smell sweet.", dynamic: "She is smelling the flowers." }
+                        ]
+                    },
+                    {
+                        heading: "Động từ nối (Linking Verbs)",
+                        text: "S + linking verb + adjective. Ví dụ: looks modern, seems practical, sounds interesting, feels safe.",
+                        examples: ["The park looks beautiful.", "She looks at the map carefully. (Phân biệt: Beautiful miêu tả chủ ngữ; carefully miêu tả hành động.)"]
+                    }
+                ]
+            },
+            4: {
+                title: "Unit 4: ASEAN and Viet Nam",
+                content: [
+                    {
+                        heading: "Danh động từ (Gerunds)",
+                        text: "Động từ thêm -ing, thực hiện chức năng của danh từ.",
+                        table: [
+                            { verb: "Làm chủ ngữ", stative: "Learning about ASEAN is useful.", dynamic: "" },
+                            { verb: "Sau enjoy, suggest, avoid, finish, practise", stative: "We enjoy meeting new people.", dynamic: "" },
+                            { verb: "Sau giới từ", stative: "Students learn by working together.", dynamic: "" },
+                            { verb: "Sau look forward to", stative: "We look forward to joining the programme.", dynamic: "" }
+                        ]
+                    },
+                    {
+                        heading: "Lưu ý quan trọng",
+                        text: "",
+                        examples: [
+                            "Một cụm danh động từ làm chủ ngữ thường đi với động từ số ít: Joining the programme helps…",
+                            "Không dùng to V sau enjoy, avoid, finish.",
+                            "Trong 'look forward to', 'to' là giới từ, nên theo sau là V-ing."
+                        ]
+                    }
+                ]
+            }
+        };
+
+        const QUESTIONS = [
+            // UNIT 3
+            { id: "U3-01", unit: 3, type: "mcq", level: "NB", question: "I ______ that smart cities will improve our lives.", options: ["believe", "am believing", "believing", "am believe"], answer: "believe", explanation: "Believe mang nghĩa trạng thái." },
+            { id: "U3-02", unit: 3, type: "mcq", level: "NB", question: "This apartment ______ to my aunt.", options: ["is belonging", "belong", "belongs", "belonging"], answer: "belongs", explanation: "Belong thường không dùng tiếp diễn." },
+            { id: "U3-03", unit: 3, type: "mcq", level: "NB", question: "The new park looks ______.", options: ["beautifully", "beautiful", "beauty", "beautify"], answer: "beautiful", explanation: "Sau động từ nối dùng tính từ." },
+            { id: "U3-04", unit: 3, type: "mcq", level: "TH", question: "Please give me a minute. I ______ about your proposal.", options: ["think", "thinks", "thought", "am thinking"], answer: "am thinking", explanation: "Diễn tả quá trình cân nhắc đang diễn ra." },
+            { id: "U3-05", unit: 3, type: "mcq", level: "TH", question: "We cannot enter the room now. The planners ______ a meeting.", options: ["have", "are having", "has", "having"], answer: "are having", explanation: "Have a meeting là hoạt động." },
+            { id: "U3-06", unit: 3, type: "mcq", level: "TH", question: "The chef ______ the soup now to check whether it needs more salt.", options: ["tastes", "taste", "is tasting", "tasting"], answer: "is tasting", explanation: "Chủ động nếm là hoạt động." },
+            { id: "U3-07", unit: 3, type: "mcq", level: "TH", question: "Which sentence uses “look” as a linking verb?", options: ["She looks at the map.", "They look for a taxi.", "We look through the report.", "The city looks modern."], answer: "The city looks modern.", explanation: "Modern miêu tả the city." },
+            { id: "U3-08", unit: 3, type: "mcq", level: "TH", question: "Which sentence is correct?", options: ["I understand the plan now.", "I am understanding the plan now.", "I understanding the plan now.", "I am understand the plan now."], answer: "I understand the plan now.", explanation: "Có now không có nghĩa luôn dùng tiếp diễn." },
+            
+            { id: "U3-09", unit: 3, type: "matching", level: "NB", question: "Ghép động từ với nghĩa trong ví dụ.", pairs: [{left: "I think this city is liveable.", right: "cho rằng"}, {left: "We have an electric car.", right: "sở hữu"}, {left: "The flowers smell sweet.", right: "có mùi"}, {left: "The soup tastes salty.", right: "có vị"}] },
+            { id: "U3-10", unit: 3, type: "matching", level: "TH", question: "Ghép câu với cách sử dụng.", pairs: [{left: "The plan sounds practical.", right: "Động từ nối + tính từ"}, {left: "She is tasting the soup.", right: "Hoạt động đang diễn ra"}, {left: "He owns this apartment.", right: "Động từ trạng thái chỉ sở hữu"}, {left: "They are thinking about moving.", right: "Quá trình cân nhắc đang diễn ra"}] },
+            
+            { id: "U3-11", unit: 3, type: "fill", level: "NB", question: "Hoàn thành cụm có nghĩa “dấu chân carbon”:", before: "carbon", after: "", answer: "footprint", hint: "dấu chân carbon" },
+            { id: "U3-12", unit: 3, type: "fill", level: "NB", question: "Hoàn thành cụm có nghĩa “chất lượng cuộc sống”:", before: "quality of", after: "", answer: "life", hint: "chất lượng cuộc sống" },
+            { id: "U3-13", unit: 3, type: "fill", level: "NB", question: "Hoàn thành cụm có nghĩa “giao thông công cộng”:", before: "public", after: "", answer: "transport", hint: "giao thông công cộng" },
+            
+            { id: "U3-14", unit: 3, type: "verb", level: "TH", segments: ["My parents ", " an apartment near the city centre."], hints: ["own"], answers: [["own"]], explanation: "Sở hữu là trạng thái." },
+            { id: "U3-15", unit: 3, type: "verb", level: "TH", segments: ["Listen! The residents ", " a discussion about the new park."], hints: ["have"], answers: [["are having"]], explanation: "Cuộc thảo luận đang diễn ra." },
+            { id: "U3-16", unit: 3, type: "verb", level: "TH", segments: ["I ", " why the road is closed."], hints: ["not understand"], answers: [["do not understand", "don't understand"]], explanation: "Understand là động từ trạng thái." },
+            { id: "U3-17", unit: 3, type: "verb", level: "VD", segments: ["Usually, I ", " the bus is the best option, but today I ", " about cycling."], hints: ["think", "think"], answers: [["think"], ["am thinking"]], explanation: "Ý kiến thường có khác với việc đang cân nhắc." },
+            { id: "U3-18", unit: 3, type: "verb", level: "VD", segments: ["The soup ", " delicious, and the chef ", " it again now to check the seasoning."], hints: ["taste", "taste"], answers: [["tastes"], ["is tasting"]], explanation: "Có vị và chủ động nếm là hai nghĩa khác nhau." },
+            
+            { id: "U3-19", unit: 3, type: "rewrite", level: "VD", prompt: "This city has a modern appearance.", before: "This city", after: ".", maxWords: 5, answers: ["looks modern"], explanation: "Sử dụng động từ nối look." },
+            { id: "U3-20", unit: 3, type: "rewrite", level: "VD", prompt: "This electric car belongs to my uncle.", before: "My uncle", after: ".", maxWords: 5, answers: ["owns this electric car"], explanation: "Dùng động từ own." },
+            { id: "U3-21", unit: 3, type: "rewrite", level: "VD", prompt: "The air in this area is becoming cleaner.", before: "The air in this area", after: ".", maxWords: 5, answers: ["is getting cleaner"], explanation: "Dùng hiện tại tiếp diễn chỉ sự thay đổi." },
+            { id: "U3-22", unit: 3, type: "rewrite", level: "VD", prompt: "My opinion is that this transport plan is practical.", before: "I", after: "practical.", maxWords: 5, answers: ["think this transport plan is"], explanation: "Dùng think chỉ quan điểm." },
+            { id: "U3-23", unit: 3, type: "rewrite", level: "VD", prompt: "The flowers have a sweet smell.", before: "The flowers", after: ".", maxWords: 5, answers: ["smell sweet"], explanation: "Dùng smell như động từ nối." },
+            
+            { id: "U3-24", unit: 3, type: "order", level: "NB", question: "Sắp xếp hội thoại", items: ["Minh: I think they are a good choice for our city.", "Lan: What do you think of electric buses?", "Minh: Because they produce less air pollution than diesel buses.", "Lan: Why do you think so?"], answer: [1, 0, 3, 2] },
+            { id: "U3-25", unit: 3, type: "order", level: "VD", question: "Sắp xếp hội thoại", items: ["Nam: No. In the first sentence, it means “believe”. In the second, it describes a process.", "Mai: So the second sentence means you are considering the idea now?", "Mai: Is “think” used in the same way in “I think it’s useful” and “I’m thinking about moving”?", "Nam: Exactly. That is why the continuous form is suitable there."], answer: [2, 0, 1, 3] },
+
+            // UNIT 4
+            { id: "U4-01", unit: 4, type: "mcq", level: "NB", question: "______ about ASEAN cultures helps students understand one another.", options: ["Learn", "Learning", "Learned", "Learns"], answer: "Learning", explanation: "Danh động từ làm chủ ngữ." },
+            { id: "U4-02", unit: 4, type: "mcq", level: "NB", question: "Mai enjoys ______ in cultural exchanges.", options: ["participating", "participate", "participated", "to participate"], answer: "participating", explanation: "Sau enjoy dùng V-ing." },
+            { id: "U4-03", unit: 4, type: "mcq", level: "NB", question: "Our teacher suggested ______ an ASEAN cultural day.", options: ["organise", "organised", "to organise", "organising"], answer: "organising", explanation: "Sau suggest dùng V-ing." },
+            { id: "U4-04", unit: 4, type: "mcq", level: "TH", question: "We look forward to ______ the delegates.", options: ["meet", "met", "meeting", "to meet"], answer: "meeting", explanation: "Look forward to + V-ing." },
+            { id: "U4-05", unit: 4, type: "mcq", level: "TH", question: "Students improve their teamwork skills by ______ on shared projects.", options: ["work", "working", "worked", "to work"], answer: "working", explanation: "Sau giới từ dùng V-ing." },
+            { id: "U4-06", unit: 4, type: "mcq", level: "TH", question: "Which sentence is correct?", options: ["Learning about ASEAN is useful.", "Learning about ASEAN are useful.", "Learn about ASEAN is useful.", "To learning about ASEAN is useful."], answer: "Learning about ASEAN is useful.", explanation: "Cụm danh động từ làm chủ ngữ đi với động từ số ít." },
+            { id: "U4-07", unit: 4, type: "mcq", level: "TH", question: "You should avoid ______ others during a discussion.", options: ["interrupt", "interrupted", "to interrupt", "interrupting"], answer: "interrupting", explanation: "Avoid + V-ing." },
+            { id: "U4-08", unit: 4, type: "mcq", level: "TH", question: "The students finished ______ their presentation.", options: ["prepare", "to prepare", "preparing", "prepared"], answer: "preparing", explanation: "Finish + V-ing." },
+            
+            { id: "U4-09", unit: 4, type: "matching", level: "NB", question: "Ghép các phần thành cụm đúng.", pairs: [{left: "enjoy", right: "learning about other cultures"}, {left: "look forward", right: "to meeting the delegates"}, {left: "be interested", right: "in joining the programme"}, {left: "develop skills", right: "by working in teams"}] },
+            { id: "U4-10", unit: 4, type: "matching", level: "TH", question: "Ghép phần in đậm với cách dùng.", pairs: [{left: "Joining the programme is exciting.", right: "Làm chủ ngữ"}, {left: "We enjoy meeting new people.", right: "Sau động từ enjoy"}, {left: "We learn by sharing ideas.", right: "Sau giới từ by"}, {left: "I look forward to seeing you.", right: "Sau cụm look forward to"}] },
+            
+            { id: "U4-11", unit: 4, type: "fill", level: "NB", question: "Hoàn thành cụm có nghĩa “mong chờ”:", before: "look forward", after: "", answer: "to", hint: "mong chờ" },
+            { id: "U4-12", unit: 4, type: "fill", level: "NB", question: "Hoàn thành cụm có nghĩa “tham gia”:", before: "take part", after: "", answer: "in", hint: "tham gia" },
+            { id: "U4-13", unit: 4, type: "fill", level: "NB", question: "Hoàn thành cụm có nghĩa “quan tâm/hứng thú với”:", before: "be interested", after: "", answer: "in", hint: "quan tâm/hứng thú với" },
+            
+            { id: "U4-14", unit: 4, type: "verb", level: "TH", segments: ["The participants practised ", " themselves in English."], hints: ["introduce"], answers: [["introducing"]], explanation: "Sau practise dùng V-ing." },
+            { id: "U4-15", unit: 4, type: "verb", level: "TH", segments: ["The delegates thanked us for ", " the event."], hints: ["organise"], answers: [["organising", "organizing"]], explanation: "Sau giới từ for dùng V-ing." },
+            { id: "U4-16", unit: 4, type: "verb", level: "TH", segments: ["We cannot finish the project without ", " together."], hints: ["work"], answers: [["working"]], explanation: "Sau giới từ without dùng V-ing." },
+            { id: "U4-17", unit: 4, type: "verb", level: "VD", segments: ["", " about different cultures ", " students become more open-minded."], hints: ["learn", "help"], answers: [["Learning"], ["helps"]], explanation: "Cụm danh động từ làm chủ ngữ số ít." },
+            { id: "U4-18", unit: 4, type: "verb", level: "VD", segments: ["Mai suggested ", " a meeting before ", " our applications."], hints: ["hold", "send"], answers: [["holding"], ["sending"]], explanation: "Sau suggest và giới từ before dùng V-ing." },
+            
+            { id: "U4-19", unit: 4, type: "rewrite", level: "VD", prompt: "It is useful to learn about ASEAN cultures.", before: "", after: "is useful.", maxWords: 5, answers: ["Learning about ASEAN cultures"], explanation: "Dùng V-ing làm chủ ngữ." },
+            { id: "U4-20", unit: 4, type: "rewrite", level: "VD", prompt: "Mai finds meeting international students enjoyable.", before: "Mai enjoys", after: ".", maxWords: 5, answers: ["meeting international students"], explanation: "Dùng enjoy + V-ing." },
+            { id: "U4-21", unit: 4, type: "rewrite", level: "VD", prompt: "Our teacher said, “Let’s hold an ASEAN quiz.”", before: "Our teacher suggested", after: ".", maxWords: 5, answers: ["holding an ASEAN quiz"], explanation: "Dùng suggest + V-ing." },
+            { id: "U4-22", unit: 4, type: "rewrite", level: "VD", prompt: "Nam can organise group activities well.", before: "Nam is good at", after: ".", maxWords: 5, answers: ["organising group activities", "organizing group activities"], explanation: "Sau giới từ at dùng V-ing." },
+            { id: "U4-23", unit: 4, type: "rewrite", level: "VD", prompt: "We are eagerly waiting to meet the ASEAN delegates.", before: "We look forward", after: ".", maxWords: 5, answers: ["to meeting the ASEAN delegates"], explanation: "Look forward to + V-ing." },
+            
+            { id: "U4-24", unit: 4, type: "order", level: "NB", question: "Sắp xếp hội thoại", items: ["Hoa: Yes, I enjoy learning about other cultures.", "Nam: Great! Let’s prepare our applications together.", "Nam: Are you interested in joining the ASEAN youth programme?", "Hoa: Good idea. We can help each other with the forms."], answer: [2, 0, 1, 3] },
+            { id: "U4-25", unit: 4, type: "order", level: "VD", question: "Sắp xếp hội thoại", items: ["Ben: Because “to” is a preposition in that expression, so we use a gerund.", "Lan: Then “I look forward to meeting them” is correct, isn’t it?", "Lan: Why do we say “look forward to meeting” instead of “look forward to meet”?", "Ben: Yes, it is. You have used the structure correctly."], answer: [2, 0, 1, 3] },
+
+            // MIXED REVIEW A
+            { id: "MA-01", unit: 3, type: "mcq", level: "NB", question: "The plan sounds ______.", options: ["interesting", "interestingly", "interest", "interests"], answer: "interesting", explanation: "Sau động từ nối sound dùng tính từ." },
+            { id: "MA-02", unit: 4, type: "fill", level: "NB", question: "“Mong chờ”:", before: "look forward", after: "", answer: "to", hint: "mong chờ" },
+            { id: "MA-03", unit: 3, type: "verb", level: "TH", segments: ["At the moment, the planners ", " a meeting."], hints: ["have"], answers: [["are having"]], explanation: "Have a meeting đang diễn ra." },
+            { id: "MA-04", unit: 4, type: "verb", level: "TH", segments: ["We finished ", " the welcome party."], hints: ["prepare"], answers: [["preparing"]], explanation: "Finish + V-ing." },
+            { id: "MA-05", unit: 3, type: "rewrite", level: "VD", prompt: "This apartment belongs to my parents.", before: "My parents", after: ".", maxWords: 5, answers: ["own this apartment"], explanation: "Dùng own chỉ sở hữu." },
+            { id: "MA-06", unit: 4, type: "rewrite", level: "VD", prompt: "It is important to respect cultural differences.", before: "", after: "is important.", maxWords: 5, answers: ["Respecting cultural differences"], explanation: "Danh động từ làm chủ ngữ." },
+            { id: "MA-07", unit: 3, type: "matching", level: "TH", question: "Ghép nối", pairs: [{left: "The city looks green.", right: "Động từ nối."}, {left: "She is looking at the map.", right: "Động từ hành động."}] },
+            { id: "MA-08", unit: 4, type: "order", level: "VD", question: "Sắp xếp hội thoại", items: ["Minh: Great! Could you check mine?", "Lan: Yes, I have. I sent it yesterday.", "Minh: Have you submitted your application?", "Lan: Sure. Let me read it."], answer: [2, 1, 0, 3] },
+
+            // MIXED REVIEW B
+            { id: "MB-01", unit: 3, type: "fill", level: "NB", question: "“Chất lượng cuộc sống”:", before: "quality of", after: "", answer: "life", hint: "chất lượng cuộc sống" },
+            { id: "MB-02", unit: 4, type: "mcq", level: "NB", question: "We enjoy ______ ideas with other students.", options: ["share", "sharing", "shared", "to share"], answer: "sharing", explanation: "Sau enjoy dùng V-ing." },
+            { id: "MB-03", unit: 3, type: "verb", level: "TH", segments: ["I ", " that more roads always solve traffic problems."], hints: ["not believe"], answers: [["do not believe", "don't believe"]], explanation: "Believe là động từ trạng thái." },
+            { id: "MB-04", unit: 4, type: "verb", level: "TH", segments: ["She is excited about ", " the exhibition."], hints: ["visit"], answers: [["visiting"]], explanation: "Sau giới từ about dùng V-ing." },
+            { id: "MB-05", unit: 3, type: "rewrite", level: "VD", prompt: "The new square has an attractive appearance.", before: "The new square", after: ".", maxWords: 5, answers: ["looks attractive"], explanation: "Dùng look như động từ nối." },
+            { id: "MB-06", unit: 4, type: "rewrite", level: "VD", prompt: "The students completed the task of preparing their presentation.", before: "The students finished", after: ".", maxWords: 5, answers: ["preparing their presentation"], explanation: "Finish + V-ing." },
+            { id: "MB-07", unit: 3, type: "order", level: "TH", question: "Sắp xếp hội thoại", items: ["Nam: Because it has better public transport and more parks.", "Mai: Why do you think so?", "Mai: What do you think of this city?", "Nam: I think it is becoming more liveable."], answer: [2, 3, 1, 0] },
+            { id: "MB-08", unit: 4, type: "matching", level: "TH", question: "Ghép nối", pairs: [{left: "good at", right: "organising activities"}, {left: "without", right: "asking for help"}, {left: "look forward to", right: "seeing the delegates"}] }
+        ];
+
+        // --- ICONS ---
+        const IconCheck = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>;
+        const IconX = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>;
+        const IconBook = () => <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>;
+        const IconPlay = () => <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>;
+        const IconHome = () => <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>;
+        const IconChevronUp = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7"></path></svg>;
+        const IconChevronDown = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>;
+        const IconBookmark = ({ solid }) => <svg className="w-5 h-5" fill={solid ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>;
+
+        // --- COMPONENTS ---
+
+        // BƯỚC CUỐI CÙNG: Dán URL Web App của Google Apps Script vào giữa 2 dấu ngoặc kép bên dưới
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxpDNYVdZnNWtUrauPTA5IH477apQ2ozHhTNXvCyNHH0MPYzqy2hOPcLruuXDniP6k/exec"; 
+
+        // Level Badge
+        const LevelBadge = ({ level }) => {
+            const colors = {
+                'NB': 'bg-green-100 text-green-800 border-green-200',
+                'TH': 'bg-blue-100 text-blue-800 border-blue-200',
+                'VD': 'bg-purple-100 text-purple-800 border-purple-200'
+            };
+            const labels = { 'NB': 'Nhận biết', 'TH': 'Thông hiểu', 'VD': 'Vận dụng' };
+            return (
+                <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${colors[level]}`}>
+                    {labels[level]}
+                </span>
+            );
+        };
+
+        // Header Component
+        const Header = ({ setView, title, studentInfo }) => (
+            <header className="bg-primary text-white p-4 shadow-md sticky top-0 z-50">
+                <div className="max-w-4xl mx-auto flex items-center justify-between">
+                    <div className="flex items-center gap-3 cursor-pointer" onClick={() => setView('home')}>
+                        <IconHome />
+                        <h1 className="text-xl font-bold font-sans">English 11 Revision</h1>
+                    </div>
+                    {title && <span className="hidden sm:block text-sm font-semibold opacity-90">{title}</span>}
+                    {studentInfo && (
+                        <div className="text-sm font-medium bg-blue-800 px-4 py-1.5 rounded-full hidden md:block">
+                            {studentInfo.fullName} - {studentInfo.className}
+                        </div>
+                    )}
+                </div>
+            </header>
+        );
+
+        // --- QUESTION RENDERERS ---
+
+        const MCQ = ({ q, value, onChange, disabled, showAnswer }) => (
+            <div className="space-y-3">
+                <p className="text-lg font-semibold mb-4 text-gray-800">{q.question}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {q.options.map((opt, i) => {
+                        let btnClass = "p-4 text-left rounded-xl border-2 transition-all ";
+                        if (showAnswer) {
+                            if (opt === q.answer) btnClass += "border-correct bg-green-50 text-green-900";
+                            else if (opt === value && opt !== q.answer) btnClass += "border-incorrect bg-red-50 text-red-900";
+                            else btnClass += "border-gray-200 opacity-50";
+                        } else {
+                            if (value === opt) btnClass += "border-primary bg-blue-50";
+                            else btnClass += "border-gray-200 hover:border-blue-300 bg-white";
+                        }
+
+                        return (
+                            <button key={i} disabled={disabled} onClick={() => onChange(opt)} className={btnClass}>
+                                <span className="font-bold mr-2">{String.fromCharCode(65 + i)}.</span> {opt}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+
+        const Matching = ({ q, value = [], onChange, disabled, showAnswer }) => {
+            const [selectedLeft, setSelectedLeft] = useState(null);
+            
+            // value is array of pairs: [{leftIdx, rightIdx}]
+            const pairs = value || [];
+            
+            // Randomize right side on mount
+            const rightItems = useMemo(() => {
+                const items = q.pairs.map((p, i) => ({ text: p.right, originalIndex: i }));
+                return items.sort(() => Math.random() - 0.5);
+            }, [q.id]);
+
+            const handleRightClick = (rightOriginalIdx) => {
+                if (disabled || selectedLeft === null) return;
+                
+                // Remove existing pair involving this left or right item
+                const newPairs = pairs.filter(p => p.leftIdx !== selectedLeft && p.rightIdx !== rightOriginalIdx);
+                newPairs.push({ leftIdx: selectedLeft, rightIdx: rightOriginalIdx });
+                onChange(newPairs);
+                setSelectedLeft(null);
+            };
+
+            const getRightItemPairedWith = (leftIdx) => {
+                const pair = pairs.find(p => p.leftIdx === leftIdx);
+                return pair ? rightItems.find(r => r.originalIndex === pair.rightIdx) : null;
+            };
+
+            return (
+                <div className="space-y-4">
+                    <p className="text-lg font-semibold text-gray-800">{q.question}</p>
+                    <div className="grid grid-cols-2 gap-4">
+                        {/* Left Column */}
+                        <div className="space-y-3">
+                            <h4 className="font-bold text-gray-500 text-sm uppercase tracking-wider text-center">Cột A</h4>
+                            {q.pairs.map((pair, idx) => {
+                                const isSelected = selectedLeft === idx;
+                                const isPaired = pairs.some(p => p.leftIdx === idx);
+                                let btnClass = "w-full p-3 text-left rounded-xl border-2 transition-all bg-white ";
+                                
+                                if (disabled) {
+                                    btnClass += "opacity-70 border-gray-200";
+                                } else if (isSelected) {
+                                    btnClass += "border-primary bg-blue-50 ring-2 ring-primary ring-opacity-50";
+                                } else if (isPaired) {
+                                    btnClass += "border-accent bg-yellow-50";
+                                } else {
+                                    btnClass += "border-gray-200 hover:border-gray-300";
+                                }
+
+                                return (
+                                    <button key={`l-${idx}`} onClick={() => !disabled && setSelectedLeft(idx)} className={btnClass}>
+                                        <div className="font-medium">{idx + 1}. {pair.left}</div>
+                                        {isPaired && <div className="text-xs text-accent mt-1 flex items-center"><IconCheck/> Đã chọn</div>}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                        {/* Right Column */}
+                        <div className="space-y-3">
+                            <h4 className="font-bold text-gray-500 text-sm uppercase tracking-wider text-center">Cột B</h4>
+                            {rightItems.map((item, displayIdx) => {
+                                const pairedWithLeftIdx = pairs.find(p => p.rightIdx === item.originalIndex)?.leftIdx;
+                                const isPaired = pairedWithLeftIdx !== undefined;
+                                
+                                let btnClass = "w-full p-3 text-left rounded-xl border-2 transition-all bg-white ";
+                                
+                                if (showAnswer) {
+                                    // Check correctness
+                                    const isCorrect = pairedWithLeftIdx === item.originalIndex; // In original data, left[i] matches right[i]
+                                    if (isPaired) {
+                                        btnClass += isCorrect ? "border-correct bg-green-50" : "border-incorrect bg-red-50";
+                                    } else {
+                                        btnClass += "border-gray-200 opacity-50";
+                                    }
+                                } else {
+                                    if (isPaired) {
+                                        btnClass += "border-accent bg-yellow-50";
+                                    } else if (selectedLeft !== null) {
+                                        btnClass += "border-dashed border-gray-400 hover:border-primary hover:bg-gray-50 cursor-pointer animate-pulse";
+                                    } else {
+                                        btnClass += "border-gray-200 cursor-default opacity-80";
+                                    }
+                                }
+
+                                return (
+                                    <button 
+                                        key={`r-${displayIdx}`} 
+                                        onClick={() => handleRightClick(item.originalIndex)}
+                                        className={btnClass}
+                                    >
+                                        <div className="font-medium">{String.fromCharCode(97 + displayIdx)}. {item.text}</div>
+                                        {isPaired && <div className="text-xs font-bold mt-1 text-gray-500">Ghép với: {pairedWithLeftIdx + 1}</div>}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const FillBlank = ({ q, value = "", onChange, disabled, showAnswer }) => {
+            const isCorrect = value.trim().toLowerCase() === q.answer.toLowerCase();
+            return (
+                <div className="space-y-4">
+                    <p className="text-lg font-semibold text-gray-800">{q.question}</p>
+                    <div className="flex flex-wrap items-center gap-2 text-xl font-medium bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                        {q.before && <span>{q.before}</span>}
+                        <input 
+                            type="text" 
+                            value={value} 
+                            onChange={e => onChange(e.target.value)} 
+                            disabled={disabled}
+                            className={`border-b-2 outline-none px-2 py-1 min-w-[120px] text-center bg-transparent transition-colors
+                                ${showAnswer ? (isCorrect ? 'border-correct text-correct' : 'border-incorrect text-incorrect') : 'border-primary focus:border-accent'}`}
+                            placeholder="..."
+                        />
+                        {q.after && <span>{q.after}</span>}
+                    </div>
+                    {showAnswer && !isCorrect && (
+                        <div className="text-correct font-semibold bg-green-50 p-3 rounded-lg border border-green-200">
+                            Đáp án đúng: <span className="uppercase">{q.answer}</span>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const VerbForm = ({ q, value = [], onChange, disabled, showAnswer }) => {
+            // value is array of strings corresponding to answers
+            const currentVals = Array.isArray(value) ? value : Array(q.hints.length).fill("");
+            
+            const handleChange = (idx, val) => {
+                const newVals = [...currentVals];
+                newVals[idx] = val;
+                onChange(newVals);
+            };
+
+            return (
+                <div className="space-y-4">
+                    <p className="text-lg font-semibold text-gray-800">Cho dạng đúng của động từ trong ngoặc:</p>
+                    <div className="leading-loose text-xl font-medium bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                        {q.segments.map((seg, i) => {
+                            if (i === q.segments.length - 1) return <span key={i}>{seg}</span>; // Last segment has no input after it
+                            
+                            const val = currentVals[i] || "";
+                            const acceptedArr = q.answers[i];
+                            const isCorrect = acceptedArr.some(ans => ans.toLowerCase() === val.trim().toLowerCase());
+                            
+                            let inputClass = "border-b-2 outline-none px-2 mx-1 min-w-[100px] text-center bg-gray-50 rounded transition-colors text-primary ";
+                            if (showAnswer) {
+                                inputClass += isCorrect ? "border-correct text-correct bg-green-50" : "border-incorrect text-incorrect bg-red-50";
+                            } else {
+                                inputClass += "border-gray-400 focus:border-accent";
+                            }
+
+                            return (
+                                <React.Fragment key={i}>
+                                    <span>{seg}</span>
+                                    <span className="inline-flex items-center gap-1">
+                                        <input 
+                                            type="text" 
+                                            value={val} 
+                                            onChange={e => handleChange(i, e.target.value)} 
+                                            disabled={disabled}
+                                            className={inputClass}
+                                        />
+                                        <span className="text-gray-500 text-sm font-normal">({q.hints[i]})</span>
+                                    </span>
+                                </React.Fragment>
+                            );
+                        })}
+                    </div>
+                    {showAnswer && (
+                        <div className="text-sm font-semibold bg-blue-50 p-4 rounded-lg border border-blue-200">
+                            Đáp án: {q.answers.map(ansArr => ansArr[0]).join(' — ')}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const Rewrite = ({ q, value = "", onChange, disabled, showAnswer }) => {
+            const wordCount = value.trim() ? value.trim().split(/\s+/).length : 0;
+            const isCorrect = q.answers.some(ans => ans.toLowerCase() === value.trim().toLowerCase());
+
+            return (
+                <div className="space-y-4">
+                    <div className="bg-gray-100 p-4 rounded-xl text-lg text-gray-700 italic border-l-4 border-primary">
+                        "{q.prompt}"
+                    </div>
+                    <div className="text-lg font-medium flex flex-wrap items-center gap-2">
+                        <span>→ {q.before}</span>
+                        <input 
+                            type="text" 
+                            value={value} 
+                            onChange={e => onChange(e.target.value)} 
+                            disabled={disabled}
+                            className={`border-b-2 border-gray-400 focus:border-primary outline-none px-2 py-1 flex-grow bg-white min-w-[200px] transition-colors
+                                ${showAnswer ? (isCorrect ? 'border-correct text-correct' : 'border-incorrect text-incorrect') : ''}`}
+                        />
+                        {q.after && <span>{q.after}</span>}
+                    </div>
+                    <div className="flex justify-between items-center text-sm">
+                        <span className={`${wordCount > q.maxWords ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
+                            Số từ: {wordCount} / {q.maxWords} (tối đa)
+                        </span>
+                    </div>
+                    {showAnswer && !isCorrect && (
+                        <div className="text-correct font-semibold bg-green-50 p-3 rounded-lg border border-green-200">
+                            Gợi ý đáp án: <span className="font-bold">{q.answers[0]}</span>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const Ordering = ({ q, value = [], onChange, disabled, showAnswer }) => {
+            // value is array of original indices representing the current order
+            const currentOrder = value.length ? value : q.items.map((_, i) => i);
+
+            const move = (idx, direction) => {
+                if (disabled) return;
+                const newOrder = [...currentOrder];
+                if (direction === -1 && idx > 0) {
+                    [newOrder[idx], newOrder[idx - 1]] = [newOrder[idx - 1], newOrder[idx]];
+                    onChange(newOrder);
+                } else if (direction === 1 && idx < newOrder.length - 1) {
+                    [newOrder[idx], newOrder[idx + 1]] = [newOrder[idx + 1], newOrder[idx]];
+                    onChange(newOrder);
+                }
+            };
+
+            return (
+                <div className="space-y-4">
+                    <p className="text-lg font-semibold text-gray-800">{q.question}</p>
+                    <div className="space-y-2">
+                        {currentOrder.map((originalIdx, currentIdx) => {
+                            const isCorrectPos = showAnswer && currentOrder[currentIdx] === q.answer[currentIdx];
+                            
+                            let itemClass = "flex items-center gap-3 p-3 bg-white rounded-xl border shadow-sm ";
+                            if (showAnswer) itemClass += isCorrectPos ? "border-correct bg-green-50" : "border-incorrect bg-red-50";
+                            else itemClass += "border-gray-200";
+
+                            return (
+                                <div key={originalIdx} className={itemClass}>
+                                    <div className="flex flex-col gap-1">
+                                        <button 
+                                            onClick={() => move(currentIdx, -1)} 
+                                            disabled={disabled || currentIdx === 0}
+                                            className="p-1 rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-30 disabled:hover:bg-gray-100 text-gray-600"
+                                        >
+                                            <IconChevronUp />
+                                        </button>
+                                        <button 
+                                            onClick={() => move(currentIdx, 1)} 
+                                            disabled={disabled || currentIdx === currentOrder.length - 1}
+                                            className="p-1 rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-30 disabled:hover:bg-gray-100 text-gray-600"
+                                        >
+                                            <IconChevronDown />
+                                        </button>
+                                    </div>
+                                    <span className="font-bold text-gray-400 text-lg w-6 text-center">{currentIdx + 1}</span>
+                                    <p className="text-gray-800 font-medium">{q.items[originalIdx]}</p>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    {showAnswer && JSON.stringify(currentOrder) !== JSON.stringify(q.answer) && (
+                        <div className="text-sm font-semibold bg-blue-50 p-4 rounded-lg border border-blue-200">
+                            Thứ tự đúng: {q.answer.map(idx => String.fromCharCode(97 + idx)).join(' → ')}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const QuestionRenderer = ({ question, ...props }) => {
+            switch (question.type) {
+                case 'mcq': return <MCQ q={question} {...props} />;
+                case 'matching': return <Matching q={question} {...props} />;
+                case 'fill': return <FillBlank q={question} {...props} />;
+                case 'verb': return <VerbForm q={question} {...props} />;
+                case 'rewrite': return <Rewrite q={question} {...props} />;
+                case 'order': return <Ordering q={question} {...props} />;
+                default: return <div>Unknown question type</div>;
+            }
+        };
+
+        // --- VIEWS ---
+
+        const LoginPage = ({ setStudentInfo }) => {
+            const [formData, setFormData] = useState({ fullName: '', className: '', school: '' });
+            const [error, setError] = useState('');
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!formData.fullName.trim() || !formData.className.trim() || !formData.school.trim()) {
+                    setError('Vui lòng điền đầy đủ thông tin!');
+                    return;
+                }
+                localStorage.setItem('studentInfo', JSON.stringify(formData));
+                setStudentInfo(formData);
+            };
+
+            return (
+                <div className="min-h-[80vh] flex items-center justify-center p-4 animate-fade-in">
+                    <div className="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full border-t-4 border-primary">
+                        <div className="text-center mb-8">
+                            <h2 className="text-3xl font-extrabold text-primary mb-2">Đăng nhập</h2>
+                            <p className="text-gray-500 font-medium">Nhập thông tin để bắt đầu học và lưu kết quả</p>
+                        </div>
+                        
+                        <form onSubmit={handleSubmit} className="space-y-5">
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Họ và tên</label>
+                                <input 
+                                    type="text" 
+                                    value={formData.fullName}
+                                    onChange={e => setFormData({...formData, fullName: e.target.value})}
+                                    placeholder="VD: Nguyễn Văn A"
+                                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Lớp</label>
+                                <input 
+                                    type="text" 
+                                    value={formData.className}
+                                    onChange={e => setFormData({...formData, className: e.target.value})}
+                                    placeholder="VD: 11A1"
+                                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-1">Trường</label>
+                                <input 
+                                    type="text" 
+                                    value={formData.school}
+                                    onChange={e => setFormData({...formData, school: e.target.value})}
+                                    placeholder="VD: THPT Chuyên"
+                                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors"
+                                />
+                            </div>
+                            
+                            {error && <p className="text-red-500 text-sm font-semibold text-center">{error}</p>}
+                            
+                            <button 
+                                type="submit"
+                                className="w-full bg-primary hover:bg-blue-900 text-white text-lg font-bold py-4 rounded-xl shadow-md transition-transform transform active:scale-95 mt-2"
+                            >
+                                Vào làm bài
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+
+        const HomePage = ({ setView, setCurrentUnit, setQuizMode }) => {
+            const startQuiz = (unit, mode) => {
+                setCurrentUnit(unit);
+                setQuizMode(mode);
+                setView(mode === 'theory' ? 'theory' : 'quiz');
+            };
+
+            return (
+                <div className="animate-fade-in p-4 max-w-4xl mx-auto space-y-8 mt-6">
+                    <div className="text-center space-y-4">
+                        <h2 className="text-3xl md:text-4xl font-extrabold text-primary">Ôn chắc Unit 3–4</h2>
+                        <p className="text-xl text-gray-600 font-medium">Tự tin vận dụng tiếng Anh</p>
+                        <button 
+                            onClick={() => startQuiz('mixed', 'test')}
+                            className="mt-6 bg-highlight hover:bg-pink-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transform transition hover:scale-105 flex items-center gap-2 mx-auto text-lg"
+                        >
+                            <IconPlay /> Bắt đầu học ngay (50 câu)
+                        </button>
+                    </div>
+
+                    <div className="mt-12">
+                        <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            <IconBook /> Chọn chủ đề
+                        </h3>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            {[3, 4].map(unit => (
+                                <div key={unit} className="bg-white rounded-2xl shadow-md p-6 border-t-4 border-primary hover:shadow-lg transition-shadow">
+                                    <h4 className="text-xl font-bold text-primary mb-2">{THEORY[unit].title}</h4>
+                                    <p className="text-gray-600 mb-4 text-sm font-medium">
+                                        {unit === 3 ? "Động từ trạng thái · Động từ nối" : "Danh động từ (Gerunds)"} · 25 câu
+                                    </p>
+                                    <div className="flex gap-3 mt-4">
+                                        <button 
+                                            onClick={() => startQuiz(unit, 'theory')}
+                                            className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2.5 px-4 rounded-xl transition-colors text-sm"
+                                        >
+                                            Lý thuyết
+                                        </button>
+                                        <button 
+                                            onClick={() => startQuiz(unit, 'study')}
+                                            className="flex-1 bg-primary hover:bg-blue-900 text-white font-semibold py-2.5 px-4 rounded-xl transition-colors text-sm"
+                                        >
+                                            Luyện tập
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const TheoryPage = ({ unit, setView, setQuizMode }) => {
+            const data = THEORY[unit];
+            if (!data) return null;
+
+            return (
+                <div className="animate-fade-in p-4 max-w-3xl mx-auto mt-4 space-y-6">
+                    <div className="flex items-center gap-4 mb-6">
+                        <button onClick={() => setView('home')} className="text-gray-500 hover:text-primary p-2 bg-white rounded-full shadow">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        </button>
+                        <h2 className="text-2xl font-bold text-primary">{data.title}</h2>
+                    </div>
+
+                    {data.content.map((sec, i) => (
+                        <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <h3 className="text-xl font-bold text-accent mb-4 border-b pb-2">{sec.heading}</h3>
+                            {sec.text && <p className="text-gray-700 mb-4 leading-relaxed">{sec.text}</p>}
+                            
+                            {sec.table && (
+                                <div className="overflow-x-auto my-4 rounded-xl border border-gray-200">
+                                    <table className="min-w-full divide-y divide-gray-200 text-sm">
+                                        <thead className="bg-gray-50">
+                                            <tr>
+                                                <th className="px-4 py-3 text-left font-bold text-gray-600">Động từ / Cách dùng</th>
+                                                <th className="px-4 py-3 text-left font-bold text-gray-600">Trạng thái / Ví dụ 1</th>
+                                                {sec.table[0].dynamic && <th className="px-4 py-3 text-left font-bold text-gray-600">Hoạt động / Ví dụ 2</th>}
+                                            </tr>
+                                        </thead>
+                                        <tbody className="bg-white divide-y divide-gray-200">
+                                            {sec.table.map((row, j) => (
+                                                <tr key={j} className="hover:bg-gray-50">
+                                                    <td className="px-4 py-3 font-semibold text-primary">{row.verb}</td>
+                                                    <td className="px-4 py-3 text-gray-700">{row.stative}</td>
+                                                    {row.dynamic && <td className="px-4 py-3 text-gray-700">{row.dynamic}</td>}
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+
+                            {sec.examples && (
+                                <ul className="space-y-2 mt-4 bg-blue-50 p-4 rounded-xl">
+                                    {sec.examples.map((ex, j) => (
+                                        <li key={j} className="flex gap-2 text-gray-800">
+                                            <span className="text-accent">•</span> <span>{ex}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                    ))}
+
+                    <div className="pt-6 pb-12 flex justify-center">
+                        <button 
+                            onClick={() => { setQuizMode('study'); setView('quiz'); }}
+                            className="bg-primary hover:bg-blue-900 text-white font-bold py-3 px-8 rounded-full shadow-md text-lg"
+                        >
+                            Vào luyện tập Unit {unit}
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        const QuizPage = ({ unit, mode, setView, setFinalResult }) => {
+            const [questions, setQuestions] = useState([]);
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [answers, setAnswers] = useState({});
+            const [checkedStatus, setCheckedStatus] = useState({}); // { index: true/false }
+            const [bookmarks, setBookmarks] = useState(new Set());
+
+            useEffect(() => {
+                // Load questions based on unit and mode
+                let qList = [];
+                if (unit === 'mixed') {
+                    // Get all basic 50 questions and shuffle
+                    qList = QUESTIONS.filter(q => q.id.startsWith('U3') || q.id.startsWith('U4')).sort(() => Math.random() - 0.5);
+                } else {
+                    qList = QUESTIONS.filter(q => q.unit === unit && !q.id.startsWith('M'));
+                }
+                setQuestions(qList);
+                setAnswers({});
+                setCheckedStatus({});
+            }, [unit, mode]);
+
+            if (questions.length === 0) return <div className="text-center p-10">Loading...</div>;
+
+            const currentQ = questions[currentIndex];
+            const currentAns = answers[currentQ.id];
+            const isChecked = checkedStatus[currentIndex];
+
+            const handleAnswerChange = (val) => {
+                if (isChecked) return; // Prevent changing after checking in study mode
+                setAnswers(prev => ({ ...prev, [currentQ.id]: val }));
+            };
+
+            const handleCheck = () => {
+                // In study mode, validate immediately
+                setCheckedStatus(prev => ({ ...prev, [currentIndex]: true }));
+            };
+
+            const toggleBookmark = () => {
+                setBookmarks(prev => {
+                    const newSet = new Set(prev);
+                    if (newSet.has(currentQ.id)) newSet.delete(currentQ.id);
+                    else newSet.add(currentQ.id);
+                    return newSet;
+                });
+            };
+
+            const handleNext = () => {
+                if (currentIndex < questions.length - 1) {
+                    setCurrentIndex(prev => prev + 1);
+                } else {
+                    // Finish quiz
+                    setFinalResult({ questions, answers, bookmarks: Array.from(bookmarks) });
+                    setView('result');
+                }
+            };
+
+            const isAnswerProvided = (val, type) => {
+                if (!val) return false;
+                if (type === 'matching') return val.length > 0;
+                if (type === 'verb') return Array.isArray(val) && val.some(v => v && typeof v === 'string' && v.trim() !== "");
+                if (type === 'order') return true; // always has default order
+                return String(val).trim() !== "";
+            };
+
+            const canCheckOrNext = mode === 'test' ? true : (isChecked || isAnswerProvided(currentAns, currentQ.type));
+
+            return (
+                <div className="animate-fade-in p-4 max-w-3xl mx-auto mt-2 h-[calc(100vh-80px)] flex flex-col">
+                    {/* Progress Header */}
+                    <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 mb-4 flex-shrink-0">
+                        <div className="flex justify-between items-center mb-2">
+                            <span className="font-bold text-gray-500 uppercase tracking-wider text-sm">
+                                Câu {currentIndex + 1} / {questions.length}
+                            </span>
+                            <div className="flex items-center gap-3">
+                                <LevelBadge level={currentQ.level} />
+                                <button onClick={toggleBookmark} className={`p-2 rounded-full transition-colors ${bookmarks.has(currentQ.id) ? 'bg-pink-100 text-highlight' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}>
+                                    <IconBookmark solid={bookmarks.has(currentQ.id)} />
+                                </button>
+                            </div>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                            <div className="bg-accent h-2.5 rounded-full transition-all duration-300" style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}></div>
+                        </div>
+                    </div>
+
+                    {/* Question Content */}
+                    <div className="flex-grow overflow-y-auto hide-scrollbar pb-24">
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <QuestionRenderer 
+                                question={currentQ} 
+                                value={currentAns} 
+                                onChange={handleAnswerChange} 
+                                disabled={isChecked}
+                                showAnswer={isChecked || mode === 'test' && isChecked} // In test mode, don't show until end
+                            />
+                            
+                            {isChecked && currentQ.explanation && (
+                                <div className="mt-6 p-4 bg-blue-50 border-l-4 border-primary rounded-r-xl animate-fade-in">
+                                    <p className="font-bold text-primary mb-1">Giải thích:</p>
+                                    <p className="text-gray-700">{currentQ.explanation}</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Bottom Action Bar */}
+                    <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
+                        <div className="max-w-3xl mx-auto flex justify-between items-center">
+                            <button 
+                                onClick={() => { if(confirm('Bạn muốn thoát bài kiểm tra?')) setView('home') }}
+                                className="px-4 py-2 text-gray-500 font-semibold hover:bg-gray-100 rounded-xl"
+                            >
+                                Thoát
+                            </button>
+                            
+                            {mode === 'study' && !isChecked ? (
+                                <button 
+                                    onClick={handleCheck}
+                                    disabled={!isAnswerProvided(currentAns, currentQ.type)}
+                                    className="bg-primary hover:bg-blue-900 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold py-3 px-8 rounded-xl shadow transition-colors"
+                                >
+                                    Kiểm tra
+                                </button>
+                            ) : (
+                                <button 
+                                    onClick={handleNext}
+                                    className="bg-accent hover:bg-yellow-700 text-white font-bold py-3 px-8 rounded-xl shadow transition-colors flex items-center gap-2"
+                                >
+                                    {currentIndex === questions.length - 1 ? 'Hoàn thành' : 'Tiếp tục'} <IconCheck/>
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const ResultPage = ({ result, setView, setQuizMode, studentInfo, currentUnit }) => {
+            const [isSaving, setIsSaving] = useState(false);
+            const [saveSuccess, setSaveSuccess] = useState(false);
+
+            // Calculate Score logic
+            const calculateScore = useMemo(() => {
+                let correctCount = 0;
+                result.questions.forEach(q => {
+                    const userAns = result.answers[q.id];
+                    let isCorrect = false;
+
+                    if (!userAns && q.type !== 'order') return;
+
+                    switch (q.type) {
+                        case 'mcq':
+                            isCorrect = userAns === q.answer;
+                            break;
+                        case 'fill':
+                            isCorrect = userAns.trim().toLowerCase() === q.answer.toLowerCase();
+                            break;
+                        case 'rewrite':
+                            isCorrect = q.answers.some(ans => ans.toLowerCase() === userAns.trim().toLowerCase());
+                            break;
+                        case 'verb':
+                            // All blanks must be correct for full point for simplicity, or partial?
+                            // Prompt says: "đúng toàn bộ thứ tự được 1 điểm" for ordering. Usually 1 point per question.
+                            const userVals = Array.isArray(userAns) ? userAns : Array(q.answers.length).fill("");
+                            isCorrect = q.answers.every((acceptedArr, idx) => {
+                                const val = userVals[idx] || "";
+                                return acceptedArr.some(ans => ans.toLowerCase() === val.trim().toLowerCase());
+                            });
+                            break;
+                        case 'order':
+                            const defaultAns = userAns || q.items.map((_, i) => i);
+                            isCorrect = JSON.stringify(defaultAns) === JSON.stringify(q.answer);
+                            break;
+                        case 'matching':
+                            // Prompt: chia đều 1 điểm cho số cặp trong câu.
+                            // For simplicity in total score, we'll give partial score, but for UI correct/incorrect let's require all pairs.
+                            if (Array.isArray(userAns) && userAns.length === q.pairs.length) {
+                                isCorrect = userAns.every(p => p.leftIdx === p.rightIdx); // Assuming original index match
+                            }
+                            break;
+                    }
+                    
+                    // Specific partial scoring for matching if requested, but let's stick to binary for the main count for simplicity, or calculate decimals.
+                    if (q.type === 'matching') {
+                        let pairsCorrect = 0;
+                        if (Array.isArray(userAns)) {
+                            userAns.forEach(p => { if (p.leftIdx === p.rightIdx) pairsCorrect++; });
+                        }
+                        correctCount += (pairsCorrect / q.pairs.length);
+                    } else if (isCorrect) {
+                        correctCount++;
+                    }
+                });
+                
+                return {
+                    raw: correctCount,
+                    total: result.questions.length,
+                    tenPoint: ((correctCount / result.questions.length) * 10).toFixed(1)
+                };
+            }, [result]);
+
+            const score = calculateScore;
+
+            useEffect(() => {
+                // Send data to Google Sheets
+                if (!GOOGLE_SCRIPT_URL || saveSuccess || isSaving) return;
+
+                const sendData = async () => {
+                    setIsSaving(true);
+                    const topic = currentUnit === 'mixed' ? 'Mixed 50 Câu (U3-U4)' : `Unit ${currentUnit}`;
+                    
+                    const payload = {
+                        timestamp: new Date().toLocaleString('vi-VN'),
+                        fullName: studentInfo.fullName,
+                        className: studentInfo.className,
+                        school: studentInfo.school,
+                        topic: topic,
+                        score: score.raw,
+                        total: score.total,
+                        tenPoint: score.tenPoint
+                    };
+
+                    try {
+                        await fetch(GOOGLE_SCRIPT_URL, {
+                            method: 'POST',
+                            mode: 'no-cors', // Tránh lỗi CORS từ trình duyệt
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                            body: JSON.stringify(payload)
+                        });
+                        setSaveSuccess(true);
+                    } catch (error) {
+                        console.error("Lỗi khi lưu kết quả:", error);
+                    } finally {
+                        setIsSaving(false);
+                    }
+                };
+
+                sendData();
+            }, [result, studentInfo, currentUnit, score, saveSuccess, isSaving]);
+
+            return (
+                <div className="animate-fade-in p-4 max-w-2xl mx-auto mt-10 space-y-8 text-center">
+                    <div className="bg-white p-10 rounded-3xl shadow-lg border border-gray-100 relative">
+                        {GOOGLE_SCRIPT_URL && (
+                            <div className="absolute top-6 right-6 text-sm font-bold">
+                                {isSaving ? (
+                                    <span className="text-accent flex items-center gap-2"><span className="animate-spin inline-block">⏳</span> Đang lưu...</span>
+                                ) : saveSuccess ? (
+                                    <span className="text-correct flex items-center gap-1"><IconCheck/> Đã lưu kết quả</span>
+                                ) : null}
+                            </div>
+                        )}
+                        <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <IconCheck className="w-12 h-12 text-correct" />
+                        </div>
+                        <h2 className="text-3xl font-extrabold text-primary mb-2">Hoàn thành bài tập!</h2>
+                        <p className="text-gray-500 font-medium text-lg mb-8">Bạn đã làm rất tốt.</p>
+                        
+                        <div className="flex justify-center items-end gap-2 mb-8">
+                            <span className="text-6xl font-black text-accent">{score.tenPoint}</span>
+                            <span className="text-2xl font-bold text-gray-400 mb-1">/ 10</span>
+                        </div>
+                        
+                        <div className="flex justify-center gap-6 text-sm font-semibold text-gray-600">
+                            <div className="bg-gray-50 px-4 py-2 rounded-xl">
+                                Số câu đúng: <span className="text-primary">{score.raw.toFixed(1)} / {score.total}</span>
+                            </div>
+                            <div className="bg-pink-50 px-4 py-2 rounded-xl text-highlight">
+                                Đã lưu: {result.bookmarks.length} câu
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+                        <button 
+                            onClick={() => setView('home')}
+                            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 px-8 rounded-xl transition-colors"
+                        >
+                            Về trang chủ
+                        </button>
+                        {/* Optional: Retry mistakes button logic can be added here by filtering questions */}
+                    </div>
+                </div>
+            );
+        };
+
+        // --- MAIN APP ---
+        const App = () => {
+            const [studentInfo, setStudentInfo] = useState(() => {
+                const saved = localStorage.getItem('studentInfo');
+                return saved ? JSON.parse(saved) : null;
+            });
+            const [view, setView] = useState('home'); // home, theory, quiz, result
+            const [currentUnit, setCurrentUnit] = useState(null);
+            const [quizMode, setQuizMode] = useState('study'); // study (check immediate), test (check at end)
+            const [finalResult, setFinalResult] = useState(null);
+
+            if (!studentInfo) {
+                return (
+                    <div className="min-h-screen flex flex-col font-sans bg-bg">
+                        <header className="bg-primary text-white p-4 shadow-md sticky top-0 z-50 text-center">
+                            <h1 className="text-xl font-bold font-sans">English 11 Revision</h1>
+                        </header>
+                        <main className="flex-grow">
+                            <LoginPage setStudentInfo={setStudentInfo} />
+                        </main>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="min-h-screen flex flex-col font-sans">
+                    <Header setView={setView} title={currentUnit === 'mixed' ? 'Luyện tập tổng hợp' : (currentUnit ? `Unit ${currentUnit}` : '')} studentInfo={studentInfo} />
+                    
+                    <main className="flex-grow">
+                        {view === 'home' && <HomePage setView={setView} setCurrentUnit={setCurrentUnit} setQuizMode={setQuizMode} />}
+                        {view === 'theory' && <TheoryPage unit={currentUnit} setView={setView} setQuizMode={setQuizMode} />}
+                        {view === 'quiz' && <QuizPage unit={currentUnit} mode={quizMode} setView={setView} setFinalResult={setFinalResult} />}
+                        {view === 'result' && <ResultPage result={finalResult} setView={setView} setQuizMode={setQuizMode} studentInfo={studentInfo} currentUnit={currentUnit} />}
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
